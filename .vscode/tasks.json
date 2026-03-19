@@ -1,0 +1,110 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build:libminia2a",
+            "command": "bash",
+            "args": [
+                "-lc",
+                "set -euo pipefail; mkdir -p build/obj; while IFS= read -r f; do out=\"build/obj/${f#src/}\"; out=\"${out%.cpp}.o\"; mkdir -p \"$(dirname \"$out\")\"; /usr/bin/g++-13 -fdiagnostics-color=always -g -std=c++20 -Iinclude -c \"$f\" -o \"$out\"; done < <(find src -type f -name '*.cpp' | sort); ar rcs build/libminia2a.a $(find build/obj -type f -name '*.o' | sort)"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "build:test:jsonrpc",
+            "command": "/usr/bin/g++-13",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-std=c++20",
+                "-Iinclude",
+                "demo/jsonrpc_test.cpp",
+                "build/libminia2a.a",
+                "-o",
+                "build/jsonrpc_test"
+            ],
+            "dependsOn": [
+                "build:libminia2a"
+            ],
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "run:test:jsonrpc",
+            "command": "./build/jsonrpc_test",
+            "dependsOn": [
+                "build:test:jsonrpc"
+            ],
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ 生成活动文件",
+            "command": "/usr/bin/g++-13",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-std=c++20",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "调试器生成的任务。"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++-11 生成活动文件",
+            "command": "/usr/bin/g++-11",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}

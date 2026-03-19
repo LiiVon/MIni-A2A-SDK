@@ -1,0 +1,18 @@
+core:
+
+
+
+model:
+agent_card 
+ ----> 
+ message_part
+   ---> 
+ agent_message
+   ---> 
+   artifact  
+   ----> 
+  task_status
+  ----> 
+  agent_task 
+  --->  
+  message_part_params
